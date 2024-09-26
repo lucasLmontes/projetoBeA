@@ -40,18 +40,16 @@ public class ImagemController {
                     imagem.setLegenda(imagemDetails.getLegenda());
                     imagem.setEvento(imagemDetails.getEvento());
                     Imagem updatedImagem = imagemRepository.save(imagem);
-                    return ResponseEntity.ok().body(updatedImagem);
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok(updatedImagem);
+                }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteImagem(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteImagem(@PathVariable Integer id) {
         return imagemRepository.findById(id)
                 .map(imagem -> {
                     imagemRepository.delete(imagem);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok().<Void>build();
+                }).orElse(ResponseEntity.notFound().build());
     }
 }

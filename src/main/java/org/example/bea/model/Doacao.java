@@ -11,8 +11,8 @@ public class Doacao {
     private Integer valor;
     private String item;
 
-    @ManyToOne
-    @JoinColumn(name = "doador_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "doador_id", nullable = false)
     private Usuario doador;
 
     // Getters e Setters

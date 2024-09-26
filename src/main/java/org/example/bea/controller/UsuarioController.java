@@ -40,20 +40,17 @@ public class UsuarioController {
                     usuario.setEmail(usuarioDetails.getEmail());
                     usuario.setSenha(usuarioDetails.getSenha());
                     usuario.setTelefone(usuarioDetails.getTelefone());
-                    usuario.setDataCadastro(usuarioDetails.getDataCadastro());
                     Usuario updatedUsuario = usuarioRepository.save(usuario);
-                    return ResponseEntity.ok().body(updatedUsuario);
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok(updatedUsuario);
+                }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUsuario(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id) {
         return usuarioRepository.findById(id)
                 .map(usuario -> {
                     usuarioRepository.delete(usuario);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok().<Void>build();
+                }).orElse(ResponseEntity.notFound().build());
     }
 }

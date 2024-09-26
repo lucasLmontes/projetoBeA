@@ -40,18 +40,16 @@ public class ParceriaController {
                     parceria.setEmail(parceriaDetails.getEmail());
                     parceria.setTelefone(parceriaDetails.getTelefone());
                     Parceria updatedParceria = parceriaRepository.save(parceria);
-                    return ResponseEntity.ok().body(updatedParceria);
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok(updatedParceria);
+                }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteParceria(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteParceria(@PathVariable Integer id) {
         return parceriaRepository.findById(id)
                 .map(parceria -> {
                     parceriaRepository.delete(parceria);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok().<Void>build();
+                }).orElse(ResponseEntity.notFound().build());
     }
 }

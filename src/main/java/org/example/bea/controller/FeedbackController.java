@@ -41,18 +41,16 @@ public class FeedbackController {
                     feedback.setAutor(feedbackDetails.getAutor());
                     feedback.setEvento(feedbackDetails.getEvento());
                     Feedback updatedFeedback = feedbackRepository.save(feedback);
-                    return ResponseEntity.ok().body(updatedFeedback);
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok(updatedFeedback);
+                }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteFeedback(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteFeedback(@PathVariable Integer id) {
         return feedbackRepository.findById(id)
                 .map(feedback -> {
                     feedbackRepository.delete(feedback);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok().<Void>build();
+                }).orElse(ResponseEntity.notFound().build());
     }
 }

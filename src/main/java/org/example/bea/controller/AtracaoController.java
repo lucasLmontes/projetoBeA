@@ -41,18 +41,16 @@ public class AtracaoController {
                     atracao.setDataFim(atracaoDetails.getDataFim());
                     atracao.setEvento(atracaoDetails.getEvento());
                     Atracao updatedAtracao = atracaoRepository.save(atracao);
-                    return ResponseEntity.ok().body(updatedAtracao);
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok(updatedAtracao);
+                }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteAtracao(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteAtracao(@PathVariable Integer id) {
         return atracaoRepository.findById(id)
                 .map(atracao -> {
                     atracaoRepository.delete(atracao);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok().<Void>build();
+                }).orElse(ResponseEntity.notFound().build());
     }
 }

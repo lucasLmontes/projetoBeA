@@ -18,9 +18,6 @@ public class EventoController {
     @Autowired
     private EventoRepository eventoRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
     @GetMapping
     public List<Evento> getAllEventos() {
         return eventoRepository.findAll();
@@ -34,21 +31,13 @@ public class EventoController {
     }
 
     @PostMapping
-    public ResponseEntity<Evento> createEvento(@RequestBody Evento evento) {
-        // Verificar se o usuário existe
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(evento.getUsuario().getUsuarioId());
-        if (usuarioOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body(null); // ou retornar um erro mais específico
-        }
-
-        evento.setUsuario(usuarioOptional.get()); // Associar o usuário ao evento
-        Evento savedEvento = eventoRepository.save(evento);
-        return ResponseEntity.ok(savedEvento);
+    public Evento createEvento(@RequestBody Evento evento) {
+        return eventoRepository.save(evento);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Evento> updateEvento(@PathVariable Integer id, @RequestBody Evento eventoDetails) {
-        return (ResponseEntity<Evento>) eventoRepository.findById(id)
+        return eventoRepository.findById(id)
                 .map(evento -> {
                     evento.setTituloEvento(eventoDetails.getTituloEvento());
                     evento.setData(eventoDetails.getData());
@@ -56,30 +45,18 @@ public class EventoController {
                     evento.setEndereco(eventoDetails.getEndereco());
                     evento.setDescricao(eventoDetails.getDescricao());
                     evento.setThumbnail(eventoDetails.getThumbnail());
-
-                    // Atualizar o usuário apenas se ele estiver presente
-                    if (eventoDetails.getUsuario() != null) {
-                        Optional<Usuario> usuarioOptional = usuarioRepository.findById(eventoDetails.getUsuario().getUsuarioId());
-                        if (usuarioOptional.isPresent()) {
-                            evento.setUsuario(usuarioOptional.get());
-                        } else {
-                            return ResponseEntity.badRequest().body(null); // ou retornar um erro mais específico
-                        }
-                    }
-
+                    evento.setUsuario(eventoDetails.getUsuario());
                     Evento updatedEvento = eventoRepository.save(evento);
-                    return ResponseEntity.ok().body(updatedEvento);
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok(updatedEvento);
+                }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteEvento(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteEvento(@PathVariable Integer id) {
         return eventoRepository.findById(id)
                 .map(evento -> {
                     eventoRepository.delete(evento);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.ok().<Void>build();
+                }).orElse(ResponseEntity.notFound().build());
     }
 }
