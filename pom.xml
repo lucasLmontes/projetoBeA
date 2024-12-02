@@ -55,6 +55,7 @@
 			<scope>test</scope>
 		</dependency>
 
+
 		<!-- Optional: Spring Boot Starter Validation for validation support -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
