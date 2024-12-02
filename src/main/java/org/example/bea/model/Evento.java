@@ -1,7 +1,9 @@
 package org.example.bea.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Evento {
@@ -21,7 +23,16 @@ public class Evento {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @JsonIgnore
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Atracao> atracoes;
+
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Feedback> feedbacks;
 
     // Getters e Setters
     public Integer getEventoId() {
@@ -86,5 +97,21 @@ public class Evento {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public List<Atracao> getAtracoes() {
+        return atracoes;
+    }
+
+    public void setAtracoes(List<Atracao> atracoes) {
+        this.atracoes = atracoes;
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 }

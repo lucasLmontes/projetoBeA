@@ -26,7 +26,7 @@ public class Usuario {
 
     @PrePersist
     protected void onCreate() {
-        dataCadastro = LocalDateTime.now(); // Define a data e hora atual
+        dataCadastro = LocalDateTime.now();
     }
 
     // Getters e Setters
